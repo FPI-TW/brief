@@ -66,17 +66,28 @@ function monthLabel(m: number) {
 export default function DashboardPage() {
   const grouped = groupByYearMonth(briefs)
   const years = Array.from(grouped.keys()).sort((a, b) => b - a)
+  const BRAND = "#ddae58"
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <header className="mb-6 flex items-end justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Briefs</h1>
-          <p className="text-sm text-gray-600">Grouped by year and month</p>
-        </div>
+    <div className="relative mx-auto max-w-6xl px-4 py-8">
+      {/* subtle brand-tinted background */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(600px circle at 0% 0%, rgba(221, 174, 88, 0.10), transparent 60%)",
+        }}
+      />
+      <header className="relative mb-6">
+        <h1 className="text-2xl font-semibold" style={{ color: BRAND }}>
+          Briefs
+        </h1>
+        <p className="text-sm text-gray-700">Grouped by year and month</p>
+        <div className="mt-3" style={{ borderBottom: `2px solid ${BRAND}` }} />
       </header>
 
-      <div className="space-y-10">
+      <div className="relative space-y-10">
         {years.map(year => {
           const monthMap = grouped.get(year)!
           const months = Array.from(monthMap.keys()).sort((a, b) => b - a)
@@ -88,24 +99,36 @@ export default function DashboardPage() {
             >
               <h2
                 id={`year-${year}`}
-                className="text-xl font-semibold text-gray-900"
+                className="border-l-4 pl-3 text-xl font-semibold text-gray-900"
+                style={{ borderColor: BRAND }}
               >
                 {year}
               </h2>
 
               {months.map(month => (
                 <div key={`${year}-${month}`} className="space-y-3">
-                  <h3 className="text-base font-medium text-gray-800">
+                  <h3
+                    className="text-base font-medium"
+                    style={{ color: "rgba(221, 174, 88, 0.85)" }}
+                  >
                     {monthLabel(month)} {year}
                   </h3>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {monthMap.get(month)!.map(item => (
                       <article
                         key={item.id}
-                        className="group overflow-hidden rounded-lg border border-neutral-300 bg-white/70 p-3 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-md"
+                        className="group overflow-hidden rounded-lg border bg-white/75 p-3 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-md"
+                        style={{ borderColor: "rgba(221, 174, 88, 0.35)" }}
                       >
-                        <div className="aspect-[3/4] w-full overflow-hidden rounded-md border border-neutral-300 bg-neutral-100">
-                          <div className="flex h-full items-center justify-center text-neutral-400">
+                        <div
+                          className="aspect-3/4 w-full overflow-hidden rounded-md border"
+                          style={{
+                            borderColor: "rgba(221, 174, 88, 0.35)",
+                            background:
+                              "linear-gradient(135deg, rgba(221, 174, 88, 0.08), rgba(221, 174, 88, 0.02))",
+                          }}
+                        >
+                          <div className="flex h-full items-center justify-center text-neutral-500">
                             <span className="text-xs">PDF placeholder</span>
                           </div>
                         </div>
@@ -113,7 +136,10 @@ export default function DashboardPage() {
                           <h4 className="line-clamp-1 text-sm font-medium text-gray-900">
                             {item.title}
                           </h4>
-                          <p className="text-xs text-gray-600">
+                          <p
+                            className="text-xs"
+                            style={{ color: "rgba(221, 174, 88, 0.9)" }}
+                          >
                             {new Date(item.date).toLocaleDateString(undefined, {
                               year: "numeric",
                               month: "short",
