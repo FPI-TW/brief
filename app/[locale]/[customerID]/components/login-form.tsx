@@ -6,6 +6,7 @@ import { z } from "zod"
 import { validateLogin } from "@/lib/auth"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { Input } from "@/components/ui/input"
 
 const loginSchema = z.object({
   account: z.string().min(1, "Account is required"),
@@ -73,7 +74,7 @@ export default function LoginForm({ customerID }: LoginFormProps) {
       }}
     >
       {/* backdrop for readability */}
-      <div className="bg-white/70 p-6 backdrop-blur-sm">
+      <div className="bg-white/80 px-6 py-8 backdrop-blur-sm">
         <div className="mb-5">
           <h2 className="text-xl font-semibold text-gray-900">Welcome</h2>
           <p className="text-sm text-gray-600">Customer: {customerID}</p>
@@ -84,12 +85,13 @@ export default function LoginForm({ customerID }: LoginFormProps) {
             <label className="mb-1 block text-sm font-medium text-gray-900">
               Account
             </label>
-            <input
+            <Input
               type="text"
               autoComplete="username"
-              className="w-full rounded-md border border-neutral-500 px-3 py-2 text-sm outline-none"
+              className="border-neutral-800 bg-transparent text-gray-900 placeholder:text-gray-500 valid:bg-none"
               {...register("account")}
             />
+
             {errors.account && (
               <p className="mt-1 text-xs text-red-600">
                 {errors.account.message}
@@ -101,10 +103,10 @@ export default function LoginForm({ customerID }: LoginFormProps) {
             <label className="mb-1 block text-sm font-medium text-gray-900">
               Password
             </label>
-            <input
+            <Input
               type="password"
               autoComplete="current-password"
-              className="w-full rounded-md border border-neutral-500 px-3 py-2 text-sm outline-none"
+              className="border-neutral-800 bg-transparent text-gray-900 placeholder:text-gray-500"
               {...register("password")}
             />
             {errors.password && (
