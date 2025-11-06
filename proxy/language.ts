@@ -10,11 +10,38 @@ function hasPathLocale(pathname: string): boolean {
   )
 }
 
-function getCookieLocale(request: NextRequest): AvailableLocale {
-  const cookie = request.cookies.get("NEXT_LOCALE")?.value as
-    | AvailableLocale
-    | undefined
-  return cookie && locales.includes(cookie) ? cookie : defaultLocale
+function getCookieLocale(request: NextRequest): AvailableLocale | undefined {
+  const cookie = request.cookies.get("NEXT_LOCALE")?.value as string | undefined
+  if (!cookie) return undefined
+  const value = cookie as AvailableLocale
+  return locales.includes(value) ? value : undefined
+}
+
+function parseAcceptLanguage(
+  header: string | null
+): AvailableLocale | undefined {
+  if (!header) return undefined
+  const parts: string[] = header.split(",")
+  for (const p of parts) {
+    const code = p.split(";")[0]?.trim().toLowerCase()
+    if (!code) continue
+    // Chinese Traditional
+    if (
+      code.startsWith("zh-hant") ||
+      code === "zh-tw" ||
+      code === "zh-hk" ||
+      code === "zh-mo"
+    )
+      return "zh-hant"
+    // Chinese Simplified
+    if (code.startsWith("zh-hans") || code === "zh-cn" || code === "zh-sg")
+      return "zh-hans"
+    // Generic zh falls back to simplified by default
+    if (code === "zh") return "zh-hans"
+    // English
+    if (code.startsWith("en")) return "en"
+  }
+  return undefined
 }
 
 export function handleLanguageRedirect(
@@ -26,8 +53,12 @@ export function handleLanguageRedirect(
   // If the path already has a locale, respect it and do nothing
   if (hasPathLocale(pathname)) return null
 
-  // Compute target locale from cookie (fallback to default)
-  const locale = getCookieLocale(request)
+  // Compute target locale: cookie -> Accept-Language -> default
+  const cookieLocale = getCookieLocale(request)
+  const headerLocale = parseAcceptLanguage(
+    request.headers.get("accept-language")
+  )
+  const locale = cookieLocale || headerLocale || defaultLocale
 
   // Build redirect URL preserving search params
   const url = new URL(nextUrl)
@@ -37,5 +68,15 @@ export function handleLanguageRedirect(
   // Avoid accidental self-redirect loops
   if (url.pathname === pathname) return null
 
-  return NextResponse.redirect(url)
+  const res = NextResponse.redirect(url)
+  // If there was no cookie, set one for subsequent requests
+  if (!cookieLocale) {
+    res.cookies.set("NEXT_LOCALE", locale, {
+      httpOnly: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+    })
+  }
+  return res
 }
