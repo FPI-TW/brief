@@ -84,7 +84,7 @@ export default function LoginForm({ customerID }: LoginFormProps) {
             {t("welcome")}
           </h2>
           <p className="text-sm text-gray-600">
-            {t("customerLine", { id: customerID })}
+            {t("customer_line", { id: customerID })}
           </p>
         </div>
 
