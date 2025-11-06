@@ -21,7 +21,7 @@ function loadFromEnv(): CustomerRecord[] | null {
     if (Array.isArray(data)) return data as CustomerRecord[]
     return null
   } catch (e) {
-    console.log(e)
+    console.error(e)
     return null
   }
 }
@@ -42,13 +42,11 @@ function loadFromFile(): CustomerRecord[] | null {
 export function loadCustomers(): CustomerRecord[] {
   if (cache) return cache
   const env = loadFromEnv()
-  console.log("env", env)
   if (env) {
     cache = env
     return cache
   }
   const file = loadFromFile()
-  console.log("file", file)
   if (file) {
     cache = file
     return cache
