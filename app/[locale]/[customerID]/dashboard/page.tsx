@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl"
 import Image from "next/image"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
+import { toast } from "sonner"
 
 type ApiBrief = { key: string; date: string; url: string }
 type ApiGroup = { year: number; month: number; items: ApiBrief[] }
@@ -89,9 +90,23 @@ export default function DashboardPage() {
                       key={item.key}
                       className="group cursor-pointer overflow-hidden rounded-lg border bg-white/75 p-3 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-md"
                       style={{ borderColor: "rgba(221, 174, 88, 0.35)" }}
-                      onClick={() =>
-                        window.open(item.url, "_blank", "noopener,noreferrer")
-                      }
+                      onClick={async () => {
+                        const w = window.open("", "_blank")
+                        if (!w) return
+                        try {
+                          const res = await fetch(
+                            `/api/briefs/url?key=${encodeURIComponent(item.key)}`,
+                            { cache: "no-store" }
+                          )
+                          if (!res.ok) throw new Error("sign_failed")
+                          const data: { url: string } = await res.json()
+                          w.opener = null
+                          w.location.href = data.url
+                        } catch {
+                          toast.error(t("error"))
+                          w.close()
+                        }
+                      }}
                     >
                       <div
                         className="flex aspect-3/4 w-full items-center justify-center overflow-hidden rounded-md border"

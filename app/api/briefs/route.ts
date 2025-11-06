@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
   let token: string | undefined
   const maxKeys = 1000
   let guard = 0
+
   try {
     do {
       const resp = await client.send(
