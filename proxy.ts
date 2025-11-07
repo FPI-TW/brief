@@ -9,7 +9,7 @@ const intlMiddleware = createMiddleware({
   localeDetection: true,
 })
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const languageRedirect = handleLanguageRedirect(request)
   if (languageRedirect) return languageRedirect
 
