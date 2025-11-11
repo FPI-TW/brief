@@ -1,5 +1,7 @@
 {
-  "hello": "你好",
+  "common": {
+    "i_accept": "我接受"
+  },
   "warning": {
     "confidentiality_agreement": {
       "title": "保密协议",
