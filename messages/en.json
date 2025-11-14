@@ -85,6 +85,7 @@
     "target_key_hint": "Must include a date like YYYY-MM-DD in the filename suffix for correct grouping.",
     "uploading": "Uploading...",
     "upload": "Upload",
+    "reset_form_button": "Reset form",
     "uploaded": "Uploaded",
     "open": "Open"
   }

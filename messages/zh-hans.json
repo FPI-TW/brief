@@ -84,6 +84,7 @@
     "target_key_hint": "需在文件名結尾包含 YYYY-MM-DD 以利分組。",
     "uploading": "上传中…",
     "upload": "上传",
+    "reset_form_button": "重置表单",
     "uploaded": "已上传",
     "open": "打开"
   }

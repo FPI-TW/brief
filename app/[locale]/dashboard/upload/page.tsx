@@ -189,13 +189,27 @@ export default function UploadPage() {
           <p className="text-xs text-red-500">{t("target_key_hint")}</p>
         </div>
 
-        <div className="pt-2">
+        <div className="space-x-2 pt-2">
           <button
             type="submit"
             disabled={isSubmitting}
             className="rounded bg-[#ddae58] px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSubmitting ? t("uploading") : t("upload")}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              reset()
+              setResult(null)
+              if (fileInputRef.current) {
+                fileInputRef.current.value = ""
+              }
+            }}
+            className="rounded border border-[#ddae58] bg-white px-4 py-2 text-sm font-medium text-[#ddae58] hover:bg-[#ddae58]/5 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {t("reset_form_button")}
           </button>
         </div>
 
